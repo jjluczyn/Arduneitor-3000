@@ -58,7 +58,7 @@ void writeLCD(String message, int line){
 void processMessage(char* message, int size){
 	switch(message[0]){
 		case 'T':
-      updateTemperature(parse2CharsToInt(message[1],message[2]),parse2CharsToInt(message[3],message[4]));
+      updateTemperature(message);
 			break;
     case 'A':
       switchAlarm(message[1] == '1');
@@ -66,8 +66,10 @@ void processMessage(char* message, int size){
 	}
 }
 
-void updateTemperature(uint16_t n1,uint16_t n2){
-    String aux = String("Temp: ")+String(n1)+String("/")+String(n2);
+void updateTemperature(String message){
+    String n1 = getValue(message,':',1);
+    String n2 = getValue(message,':',2);
+    String aux = "Temp: " + n1 + "/" + n2;
     writeLCD(aux,0);
 }
 
@@ -94,5 +96,23 @@ void updateAlarmState(){
 
 uint16_t parse2CharsToInt(char c1, char c2){
   return c1<<8 | c2;
+}
+
+// https://stackoverflow.com/questions/9072320/split-string-into-string-array
+String getValue(String data, char separator, int index)
+{
+  int found = 0;
+  int strIndex[] = {0, -1};
+  int maxIndex = data.length()-1;
+
+  for(int i=0; i<=maxIndex && found<=index; i++){
+    if(data.charAt(i)==separator || i==maxIndex){
+        found++;
+        strIndex[0] = strIndex[1]+1;
+        strIndex[1] = (i == maxIndex) ? i+1 : i;
+    }
+  }
+
+  return found>index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
 
