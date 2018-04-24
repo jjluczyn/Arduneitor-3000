@@ -128,16 +128,9 @@ void updateAlarmState(){
     //String aux = String("I: ")+String(alarmIter)+String(" B: ")+String(alarmState);
     //writeLCD(aux,0);
     if(alarmState){
-      alarmIter = alarmIter +1;
-      if(alarmIter >= 5){
-          lastAlarmIterState = !lastAlarmIterState;
-          alarmIter = 0;
-      }
-      digitalWrite(ALARM_PIN, lastAlarmIterState? HIGH: LOW);
+      playTone();
     } else {
-        digitalWrite(ALARM_PIN, LOW);
-        lastAlarmIterState = true;
-        alarmIter = 0;
+        i = 0;
     }
 }
 
