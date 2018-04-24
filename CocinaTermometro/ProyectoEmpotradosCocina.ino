@@ -93,12 +93,16 @@ void loop() {
             uint16_t sendTempCur = currTemperature;
             uint16_t sendTempObj = objTemperature;
 
+            String s1 = String(sendTempCur);
+            String s2 = String(sendTempObj);
             Serial1.write('T');
-            Serial1.write((char)sendTempCur>>8);
-            Serial1.write((char)sendTempCur);
-            Serial1.write((char)sendTempObj>>8);
-            Serial1.write((char)sendTempObj);
-            Serial1.write("----/----/-");
+            Serial1.write(':');
+            Serial1.write(s1);
+            Serial1.write(':');
+            Serial1.write(s2);
+            for(int i = 0; i < 16 - 3 - s1.length() - s2.length(); i++){
+             Serial1.write(' '); 
+            }
             if (currTemperature>=objTemperature){
                 Serial1.write("A1----/----/----");
             }
