@@ -166,11 +166,11 @@ void playTone() {
     //  played less long than 'duration', pulse speaker HIGH and LOW
     while (elapsed_time < duration) {
  
-      digitalWrite(speakerOut,HIGH);
+      digitalWrite(ALARM_PIN,HIGH);
       delayMicroseconds(toneM / 2);
  
       // DOWN
-      digitalWrite(speakerOut, LOW);
+      digitalWrite(ALARM_PIN, LOW);
       delayMicroseconds(toneM / 2);
  
       // Keep track of how long we pulsed
