@@ -34,16 +34,18 @@ int processState;
     // 0-Initialization;
     // 1-Communication;
 int objTemperature;
-int auxTemp;
+float auxTemp;
 
 void setup() {
     processState = 0;
-    auxTemp =100;
+
     objTemperature = 0;
 
     lcd.begin(16, 2);
 
     Serial1.begin(9600);
+    delay(50);
+    initTermometer();
 }
 
 void loop() {
@@ -81,6 +83,7 @@ void loop() {
                 delay(200); //Para que de tiempo a retirar el dedo.
             }
             processState = 1;
+            initTermometer();
             break;
         case 1:
             int currTemperature;
@@ -90,16 +93,20 @@ void loop() {
             writeLCD(String("T. obj. ")+String(objTemperature),1);
 
 
-            uint16_t sendTempCur = currTemperature;
-            uint16_t sendTempObj = objTemperature;
+            int sendTempCur = currTemperature;
+            int sendTempObj = objTemperature;
 
             String s1 = String(sendTempCur);
             String s2 = String(sendTempObj);
             Serial1.write('T');
             Serial1.write(':');
-            Serial1.write(s1);
+            for(int i=0; i<s1.length(); i++){
+              Serial1.write(s1.charAt(i));
+            }
             Serial1.write(':');
-            Serial1.write(s2);
+            for(int i=0; i<s1.length(); i++){
+              Serial1.write(s2.charAt(i));
+            }
             for(int i = 0; i < 16 - 3 - s1.length() - s2.length(); i++){
              Serial1.write(' '); 
             }
@@ -108,12 +115,19 @@ void loop() {
             }
             break;
     }
-    delay(1000);
+    delay(400);
+}
+
+void initTermometer(){
+  float aux = getOhms();
+  float temp = aux*3.3;
+  auxTemp = 24 - temp;
 }
 
 int getTemperature(){
-    auxTemp++;
-    return auxTemp;
+  float aux = getOhms();
+    int celc = aux*3.3+auxTemp;
+    return celc;
 }
 
 void writeLCD(String message, int line){
@@ -130,5 +144,22 @@ void keypadEvent(KeypadEvent key) {
       readPressed = true;
       break;
   }
+}
+
+float getOhms(){
+  int raw= 0;
+  int Vin= 5;
+  float Vout= 0;
+  float r1= 100;
+  float r2= 0;
+  float buffer= 0;
+  while(raw==0){
+    raw= analogRead(0);
+  }
+  buffer= raw * Vin;
+  Vout= (buffer)/1024.0;
+  buffer= (Vin/Vout) -1;
+  r2= r1 * buffer;
+  return r2;
 }
 

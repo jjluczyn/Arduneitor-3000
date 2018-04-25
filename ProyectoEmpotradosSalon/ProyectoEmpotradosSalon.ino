@@ -48,8 +48,8 @@ int potVal = 0;
 int i = 0; //Current position
 
 //LCD variables
-const int rs = 8, en = 9, d4 = 4, d5 = 5, d6 = 6, d7 = 7;
-LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+const int rs = 8, en = 9, dd4 = 4, dd5 = 5, dd6 = 6, dd7 = 7;
+LiquidCrystal lcd(rs, en, dd4, dd5, dd6, dd7);
 char BLANKLINE[16] = "               ";
 
 //Communication variables
